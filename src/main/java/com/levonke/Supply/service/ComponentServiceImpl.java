@@ -7,7 +7,6 @@ import com.levonke.Supply.web.model.ComponentRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityNotFoundException;
 
 @Service
@@ -60,4 +59,5 @@ public class ComponentServiceImpl implements ComponentService {
 	public void delete(Integer componentId) {
 		componentRepository.delete(componentId);
 	}
+	
 }
