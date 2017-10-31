@@ -16,7 +16,7 @@ import java.util.ArrayList;
 @RequestMapping(value = ComponentController.COMPONENTS_BASE_URI)
 public class ComponentController {
 
-	public static final String COMPONENTS_BASE_URI = "/components";
+	public static final String COMPONENTS_BASE_URI = "/api/supply/components";
 
 	@Autowired
 	ComponentServiceImpl componentService;
