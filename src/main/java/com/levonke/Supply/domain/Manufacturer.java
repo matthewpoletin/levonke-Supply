@@ -16,13 +16,13 @@ public class Manufacturer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "manufacturers_id")
-	Integer id;
+	private Integer id;
 	
 	@Column(name = "manufacturers_name", unique = true, nullable = false)
-	String name;
+	private String name;
 	
 	@Column(name = "manufacturers_website")
-	String website;
+	private String website;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL)
