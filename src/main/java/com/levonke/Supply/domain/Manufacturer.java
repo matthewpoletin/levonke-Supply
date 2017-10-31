@@ -1,9 +1,11 @@
 package com.levonke.Supply.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.experimental.Accessors;
-
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Data
 @Entity
@@ -21,5 +23,9 @@ public class Manufacturer {
 	
 	@Column(name = "manufacturers_website")
 	String website;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL)
+	private Collection<Component> components = new ArrayList<Component>();
 	
 }

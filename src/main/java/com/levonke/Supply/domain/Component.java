@@ -1,5 +1,6 @@
 package com.levonke.Supply.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -19,7 +20,9 @@ public class Component {
 	@Column(name = "components_manufacturer_part_number", unique = true)
 	private String manufacturerPartNumber;
 	
-	// TODO: Add manufacturer
-//	Manufacturer manufacturer;
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "components_manufacturer_id")
+	Manufacturer manufacturer;
 	
 }
