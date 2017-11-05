@@ -10,23 +10,28 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = ManufacturerController.MANUFACTURERS_BASE_URI)
 public class ManufacturerController {
 	
-	
 	public static final String MANUFACTURERS_BASE_URI = "/api/supply/manufacturers";
 	
+	private ManufacturerServiceImpl manufacturerService;
+	
 	@Autowired
-	ManufacturerServiceImpl manufacturerService;
+	public ManufacturerController(ManufacturerServiceImpl manufacturerService) {
+		this.manufacturerService = manufacturerService;
+	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ArrayList<ManufacturerResponse> getManufacturer() {
-		ArrayList<ManufacturerResponse> manufacturerResponses = new ArrayList<ManufacturerResponse>();
-		manufacturerService.getManufacturers().forEach(manufacturer -> manufacturerResponses.add(new ManufacturerResponse(manufacturer)));
-		return manufacturerResponses;
+	public List<ManufacturerResponse> getManufacturer(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) {
+		return manufacturerService.getManufacturers(page, size)
+			.stream()
+			.map(ManufacturerResponse::new)
+			.collect(Collectors.toList());
 	}
 	
 	@ResponseStatus(HttpStatus.CREATED)

@@ -1,8 +1,8 @@
 package com.levonke.Supply.repository;
 
 import com.levonke.Supply.domain.Component;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ComponentRepository
-	extends CrudRepository<Component, Integer> {
+	extends JpaRepository<Component, Integer> {
 }

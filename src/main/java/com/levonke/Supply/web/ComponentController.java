@@ -10,7 +10,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = ComponentController.COMPONENTS_BASE_URI)
@@ -18,14 +19,19 @@ public class ComponentController {
 
 	public static final String COMPONENTS_BASE_URI = "/api/supply/components";
 
+	private ComponentServiceImpl componentService;
+	
 	@Autowired
-	ComponentServiceImpl componentService;
+	public ComponentController(ComponentServiceImpl componentService) {
+		this.componentService = componentService;
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ArrayList<ComponentResponse> getComponents() {
-		ArrayList<ComponentResponse> componentResponses = new ArrayList<ComponentResponse>();
-		componentService.getComponents().forEach(component -> componentResponses.add(new ComponentResponse(component)));
-		return componentResponses;
+	public List<ComponentResponse> getComponents(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) {
+		return componentService.getComponents(page, size)
+			.stream()
+			.map(ComponentResponse::new)
+			.collect(Collectors.toList());
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)

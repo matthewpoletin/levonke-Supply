@@ -5,9 +5,11 @@ import com.levonke.Supply.repository.ComponentRepository;
 import com.levonke.Supply.web.model.ComponentRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 public class ComponentServiceImpl implements ComponentService {
@@ -21,8 +23,14 @@ public class ComponentServiceImpl implements ComponentService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Iterable<Component> getComponents() {
-		return componentRepository.findAll();
+	public List<Component> getComponents(Integer page, Integer size) {
+		if (page == null) {
+			page = 0;
+		}
+		if (size == null) {
+			size = 25;
+		}
+		return componentRepository.findAll(new PageRequest(page, size)).getContent();
 	}
 	
 	@Override

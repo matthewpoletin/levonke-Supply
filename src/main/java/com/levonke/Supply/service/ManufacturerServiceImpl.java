@@ -5,9 +5,11 @@ import com.levonke.Supply.repository.ManufacturerRepository;
 import com.levonke.Supply.web.model.ManufacturerRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 public class ManufacturerServiceImpl implements ManufacturerService {
@@ -17,8 +19,14 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Iterable<Manufacturer> getManufacturers() {
-		return manufacturerRepository.findAll();
+	public List<Manufacturer> getManufacturers(Integer page, Integer size) {
+		if (page == null) {
+			page = 0;
+		}
+		if (size == null) {
+			size = 25;
+		}
+		return manufacturerRepository.findAll(new PageRequest(page, size)).getContent();
 	}
 	
 	@Override

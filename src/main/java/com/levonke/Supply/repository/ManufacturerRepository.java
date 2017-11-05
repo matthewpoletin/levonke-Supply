@@ -2,8 +2,8 @@ package com.levonke.Supply.repository;
 
 import com.levonke.Supply.domain.Manufacturer;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ManufacturerRepository
-		extends CrudRepository<Manufacturer, Integer> {
+		extends JpaRepository<Manufacturer, Integer> {
 }
