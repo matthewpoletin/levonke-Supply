@@ -10,14 +10,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = ManufacturerController.MANUFACTURERS_BASE_URI)
+@RequestMapping(ManufacturerController.manufacturerBaseURI)
 public class ManufacturerController {
 	
-	public static final String MANUFACTURERS_BASE_URI = "/api/supply/manufacturers";
+	static final String manufacturerBaseURI = "/api/supply/manufacturers";
 	
 	private ManufacturerServiceImpl manufacturerService;
 	
@@ -36,25 +37,33 @@ public class ManufacturerController {
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(method = RequestMethod.POST)
-	public void createManufacturer(@RequestBody ManufacturerRequest manufacturerRequest, HttpServletResponse response) {
-		Manufacturer manufacturer = manufacturerService.create(manufacturerRequest);
-		response.addHeader(HttpHeaders.LOCATION, this.MANUFACTURERS_BASE_URI + "/" + manufacturer.getId());
+	public ManufacturerResponse createManufacturer(@RequestBody ManufacturerRequest manufacturerRequest, HttpServletResponse response) {
+		Manufacturer manufacturer = manufacturerService.createManufacturer(manufacturerRequest);
+		response.addHeader(HttpHeaders.LOCATION, manufacturerBaseURI + "/" + manufacturer.getId());
+		return new ManufacturerResponse(manufacturer);
 	}
-	
+
 	@RequestMapping(value = "/{manufacturerId}", method = RequestMethod.GET)
 	public ManufacturerResponse getManufacturer(@PathVariable("manufacturerId") final Integer manufacturerId) {
-		return new ManufacturerResponse(manufacturerService.read(manufacturerId));
+		return new ManufacturerResponse(manufacturerService.getManufacturerById(manufacturerId));
 	}
-	
+
 	@RequestMapping(value = "{manufacturerId}", method = RequestMethod.PATCH)
 	public ManufacturerResponse updateManufacturer(@PathVariable("manufacturerId") final Integer manufacturerId, @RequestBody ManufacturerRequest manufacturerRequest) {
-		return new ManufacturerResponse(manufacturerService.update(manufacturerId, manufacturerRequest));
+		return new ManufacturerResponse(manufacturerService.updateManufacturerById(manufacturerId, manufacturerRequest));
 	}
-	
+
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@RequestMapping(value = "{manufacturerId}", method = RequestMethod.DELETE)
 	public void deleteManufacturer(@PathVariable("manufacturerId") final Integer manufacturerId) {
-		manufacturerService.delete(manufacturerId);
+		manufacturerService.deleteManufacturerById(manufacturerId);
+	}
+	
+	@RequestMapping(value = "{manufacturerId}/components", method = RequestMethod.GET)
+	public List<Integer> getComponents(@PathVariable("manufacturerId") final Integer manufacturerId) {
+		List<Integer> componentsId = new ArrayList<>();
+		manufacturerService.getComponents(manufacturerId).forEach(component -> componentsId.add(component.getId()));
+		return componentsId;
 	}
 	
 }

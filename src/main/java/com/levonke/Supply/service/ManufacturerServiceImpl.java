@@ -1,5 +1,6 @@
 package com.levonke.Supply.service;
 
+import com.levonke.Supply.domain.Component;
 import com.levonke.Supply.domain.Manufacturer;
 import com.levonke.Supply.repository.ManufacturerRepository;
 import com.levonke.Supply.web.model.ManufacturerRequest;
@@ -9,13 +10,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ManufacturerServiceImpl implements ManufacturerService {
 	
+	private final ManufacturerRepository manufacturerRepository;
+	
 	@Autowired
-	private ManufacturerRepository manufacturerRepository;
+	public ManufacturerServiceImpl(ManufacturerRepository manufacturerRepository) {
+		this.manufacturerRepository = manufacturerRepository;
+	}
 	
 	@Override
 	@Transactional(readOnly = true)
@@ -26,12 +32,12 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 		if (size == null) {
 			size = 25;
 		}
-		return manufacturerRepository.findAll(new PageRequest(page, size)).getContent();
+		return manufacturerRepository.findAll(PageRequest.of(page, size)).getContent();
 	}
 	
 	@Override
 	@Transactional
-	public Manufacturer create(ManufacturerRequest manufacturerRequest) {
+	public Manufacturer createManufacturer(ManufacturerRequest manufacturerRequest) {
 		Manufacturer manufacturer = new Manufacturer()
 			.setName(manufacturerRequest.getName())
 			.setWebsite(manufacturerRequest.getWebsite());
@@ -40,21 +46,15 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Manufacturer read(Integer manufacturerId) {
-		Manufacturer manufacturer = manufacturerRepository.findOne(manufacturerId);
-		if (manufacturer == null) {
-			throw new EntityNotFoundException("Manufacturer '{" + manufacturerId + "}' not found");
-		}
-		return manufacturer;
+	public Manufacturer getManufacturerById(Integer manufacturerId) {
+		return manufacturerRepository.findById(manufacturerId)
+			.orElseThrow(() -> new EntityNotFoundException("Manufacturer '{" + manufacturerId + "}' not found"));
 	}
 	
 	@Override
 	@Transactional
-	public Manufacturer update(Integer manufacturerId, ManufacturerRequest manufacturerRequest) {
-		Manufacturer manufacturer = manufacturerRepository.findOne(manufacturerId);
-		if (manufacturer == null) {
-			throw new EntityNotFoundException("Manufacturer '{" + manufacturerId + "}' not found");
-		}
+	public Manufacturer updateManufacturerById(Integer manufacturerId, ManufacturerRequest manufacturerRequest) {
+		Manufacturer manufacturer = this.getManufacturerById(manufacturerId);
 		manufacturer.setName(manufacturerRequest.getName() != null ? manufacturerRequest.getName() : manufacturer.getName());
 		manufacturer.setWebsite(manufacturerRequest.getWebsite() != null ? manufacturerRequest.getWebsite() : manufacturer.getWebsite());
 		return manufacturerRepository.save(manufacturer);
@@ -62,8 +62,15 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 	
 	@Override
 	@Transactional
-	public void delete(Integer manufacturerId) {
-		manufacturerRepository.delete(manufacturerId);
+	public void deleteManufacturerById(Integer manufacturerId) {
+		manufacturerRepository.deleteById(manufacturerId);
+	}
+	
+	@Override
+	@Transactional
+	public List<Component> getComponents(Integer manufacturerId) {
+		Manufacturer manufacturer = this.getManufacturerById(manufacturerId);
+		return new ArrayList<>(manufacturer.getComponents());
 	}
 	
 }

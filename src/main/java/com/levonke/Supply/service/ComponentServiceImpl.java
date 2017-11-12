@@ -1,6 +1,7 @@
 package com.levonke.Supply.service;
 
 import com.levonke.Supply.domain.Component;
+import com.levonke.Supply.domain.Manufacturer;
 import com.levonke.Supply.repository.ComponentRepository;
 import com.levonke.Supply.web.model.ComponentRequest;
 
@@ -16,9 +17,12 @@ public class ComponentServiceImpl implements ComponentService {
 	
 	private final ComponentRepository componentRepository;
 	
+	private final ManufacturerServiceImpl manufacturerService;
+	
 	@Autowired
-	public ComponentServiceImpl(ComponentRepository componentRepository) {
+	public ComponentServiceImpl(ComponentRepository componentRepository, ManufacturerServiceImpl manufacturerService) {
 		this.componentRepository = componentRepository;
+		this.manufacturerService = manufacturerService;
 	}
 	
 	@Override
@@ -30,12 +34,12 @@ public class ComponentServiceImpl implements ComponentService {
 		if (size == null) {
 			size = 25;
 		}
-		return componentRepository.findAll(new PageRequest(page, size)).getContent();
+		return componentRepository.findAll(PageRequest.of(page, size)).getContent();
 	}
 	
 	@Override
 	@Transactional
-	public Component create(ComponentRequest componentRequest) {
+	public Component createComponent(ComponentRequest componentRequest) {
 		Component component = new Component()
 			.setManufacturerPartNumber(componentRequest.getManufacturerPartNumber());
 		return componentRepository.save(component);
@@ -43,29 +47,38 @@ public class ComponentServiceImpl implements ComponentService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Component read(Integer componentId) {
-		Component component = componentRepository.findOne(componentId);
-		if (component == null) {
-			throw new EntityNotFoundException("Component '{" + componentId + "}' not found");
-		}
-		return component;
+	public Component getComponentById(Integer componentId) {
+		return componentRepository.findById(componentId)
+			.orElseThrow(() -> new EntityNotFoundException("Component '{" + componentId + "}' not found"));
 	}
 	
 	@Override
 	@Transactional
-	public Component update(Integer componentId, ComponentRequest componentRequest) {
-		Component component = componentRepository.findOne(componentId);
-		if (component == null) {
-			throw new EntityNotFoundException("Component '{" + componentId + "}' not found");
-		}
+	public Component updateComponentById(Integer componentId, ComponentRequest componentRequest) {
+		Component component = this.getComponentById(componentId);
 		component.setManufacturerPartNumber(componentRequest.getManufacturerPartNumber() != null ? componentRequest.getManufacturerPartNumber() : component.getManufacturerPartNumber());
 		return componentRepository.save(component);
 	}
 	
 	@Override
 	@Transactional
-	public void delete(Integer componentId) {
-		componentRepository.delete(componentId);
+	public void deleteComponentById(Integer componentId) {
+		componentRepository.deleteById(componentId);
+	}
+	
+	@Override
+	@Transactional
+	public void setManufacturer(Integer componentId, Integer manufacturerId) {
+		Manufacturer manufacturer = manufacturerService.getManufacturerById(manufacturerId);
+		Component component = this.getComponentById(componentId);
+		component.setManufacturer(manufacturer);
+		componentRepository.save(component);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Manufacturer getManufacturer(Integer componentId) {
+		return this.getComponentById(componentId).getManufacturer();
 	}
 	
 }
