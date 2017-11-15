@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ComponentServiceImpl implements ComponentService {
@@ -42,6 +43,7 @@ public class ComponentServiceImpl implements ComponentService {
 	public Component createComponent(ComponentRequest componentRequest) {
 		Component component = new Component()
 			.setManufacturerPartNumber(componentRequest.getManufacturerPartNumber());
+		component.setUuid(UUID.randomUUID());
 		return componentRepository.save(component);
 	}
 	

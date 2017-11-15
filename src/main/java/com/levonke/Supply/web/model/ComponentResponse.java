@@ -9,11 +9,13 @@ public class ComponentResponse {
 	Integer id;
 	String manufacturerPartNumber;
 	Integer manufacturerId;
+	String uuid;
 	
 	public ComponentResponse(Component component) {
 		this.id = component.getId();
 		this.manufacturerPartNumber = component.getManufacturerPartNumber();
-		this.manufacturerId = component.getManufacturer().getId();
+		this.uuid = component.getUuid().toString();
+		this.manufacturerId = component.getManufacturer() != null ? component.getManufacturer().getId() : null;
 	}
 	
 }
