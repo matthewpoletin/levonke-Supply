@@ -6,5 +6,6 @@ import lombok.Data;
 public class ComponentRequest {
 	
 	private String manufacturerPartNumber;
+	String uuid;
 	
 }

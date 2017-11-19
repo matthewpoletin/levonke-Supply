@@ -55,6 +55,12 @@ public class ComponentServiceImpl implements ComponentService {
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
+	public Component getComponentByUUID(UUID uuid) {
+		return componentRepository.findComponentByUuid(uuid);
+	}
+	
+	@Override
 	@Transactional
 	public Component updateComponentById(Integer componentId, ComponentRequest componentRequest) {
 		Component component = this.getComponentById(componentId);
