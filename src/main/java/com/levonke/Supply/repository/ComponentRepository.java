@@ -9,5 +9,6 @@ public interface ComponentRepository
 	extends JpaRepository<Component, Integer> {
 	
 	Component findComponentByUuid(UUID uuid);
+	Component findComponentByManufacturerPartNumber(String manufacturerPartNumber);
 	
 }

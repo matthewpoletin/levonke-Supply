@@ -26,7 +26,7 @@ public class Component {
 	@JoinColumn(name = "components_manufacturer_id")
 	Manufacturer manufacturer;
 	
-	@Column(name  = "components_uuid", unique = true/*, nullable = false*/)
+	@Column(name  = "components_uuid", unique = true, nullable = false)
 	// TODO: make values trigger generated
 //	@GeneratedValue(generator="system-uuid")
 //	@GenericGenerator(name="system-uuid", strategy = "uuid")

@@ -41,9 +41,12 @@ public class ComponentServiceImpl implements ComponentService {
 	@Override
 	@Transactional
 	public Component createComponent(ComponentRequest componentRequest) {
-		Component component = new Component()
-			.setManufacturerPartNumber(componentRequest.getManufacturerPartNumber());
-		component.setUuid(UUID.randomUUID());
+		Component component = componentRepository.findComponentByManufacturerPartNumber(componentRequest.getManufacturerPartNumber());
+		if (component == null) {
+			component = new Component()
+				.setManufacturerPartNumber(componentRequest.getManufacturerPartNumber());
+			component.setUuid(UUID.randomUUID());
+		}
 		return componentRepository.save(component);
 	}
 	
