@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
@@ -79,11 +80,13 @@ public class ComponentServiceImpl implements ComponentService {
 	
 	@Override
 	@Transactional
-	public void setManufacturer(Integer componentId, Integer manufacturerId) {
-		Manufacturer manufacturer = manufacturerService.getManufacturerById(manufacturerId);
-		Component component = this.getComponentById(componentId);
-		component.setManufacturer(manufacturer);
-		componentRepository.save(component);
+	public void setManufacturer(Integer componentId, @NotNull Integer manufacturerId) {
+		if (manufacturerId != null) {
+			Manufacturer manufacturer = manufacturerService.getManufacturerById(manufacturerId);
+			Component component = this.getComponentById(componentId);
+			component.setManufacturer(manufacturer);
+			componentRepository.save(component);
+		}
 	}
 
 	@Override

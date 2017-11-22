@@ -3,11 +3,12 @@ package com.levonke.Supply.web.model;
 import com.levonke.Supply.domain.Manufacturer;
 
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class ManufacturerResponse {
 	
 	Integer id;

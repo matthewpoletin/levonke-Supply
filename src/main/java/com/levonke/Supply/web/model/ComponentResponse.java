@@ -2,8 +2,10 @@ package com.levonke.Supply.web.model;
 
 import com.levonke.Supply.domain.Component;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class ComponentResponse {
 	
 	Integer id;
@@ -14,7 +16,7 @@ public class ComponentResponse {
 	public ComponentResponse(Component component) {
 		this.id = component.getId();
 		this.manufacturerPartNumber = component.getManufacturerPartNumber();
-		this.uuid = component.getUuid().toString();
+		this.uuid = component.getUuid() != null ? component.getUuid().toString() : null;
 		this.manufacturerId = component.getManufacturer() != null ? component.getManufacturer().getId() : null;
 	}
 	

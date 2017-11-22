@@ -11,16 +11,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(ComponentController.componentsBaseURI)
+@RequestMapping(ComponentController.componentBaseURI)
 public class ComponentController {
 	
-	static final String componentsBaseURI = "/api/supply";
+	public static final String componentBaseURI = "/api/supply";
 	
 	private ComponentServiceImpl componentService;
 	
@@ -41,7 +40,7 @@ public class ComponentController {
 	@RequestMapping(value = "/components", method = RequestMethod.POST)
 	public ComponentResponse createComponent(@RequestBody ComponentRequest componentRequest, HttpServletResponse response) {
 		Component component = componentService.createComponent(componentRequest);
-		response.addHeader(HttpHeaders.LOCATION, componentsBaseURI + "/" + component.getId());
+		response.addHeader(HttpHeaders.LOCATION, componentBaseURI + "/components/" + component.getId());
 		return new ComponentResponse(component);
 	}
 	
