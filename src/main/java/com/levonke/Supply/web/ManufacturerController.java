@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @RequestMapping(ManufacturerController.manufacturerBaseURI)
 public class ManufacturerController {
 	
-	public static final String manufacturerBaseURI = "/api/supply";
+	static final String manufacturerBaseURI = "/api/supply";
 	
 	private ManufacturerServiceImpl manufacturerService;
 	
@@ -37,7 +38,7 @@ public class ManufacturerController {
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(value = "/manufacturers", method = RequestMethod.POST)
-	public ManufacturerResponse createManufacturer(@RequestBody ManufacturerRequest manufacturerRequest, HttpServletResponse response) {
+	public ManufacturerResponse createManufacturer(@Valid @RequestBody ManufacturerRequest manufacturerRequest, HttpServletResponse response) {
 		Manufacturer manufacturer = manufacturerService.createManufacturer(manufacturerRequest);
 		response.addHeader(HttpHeaders.LOCATION, manufacturerBaseURI + "/manufacturers/" + manufacturer.getId());
 		return new ManufacturerResponse(manufacturer);
@@ -49,7 +50,7 @@ public class ManufacturerController {
 	}
 
 	@RequestMapping(value = "/manufacturers/{manufacturerId}", method = RequestMethod.PATCH)
-	public ManufacturerResponse updateManufacturer(@PathVariable("manufacturerId") final Integer manufacturerId, @RequestBody ManufacturerRequest manufacturerRequest) {
+	public ManufacturerResponse updateManufacturer(@PathVariable("manufacturerId") final Integer manufacturerId, @Valid @RequestBody ManufacturerRequest manufacturerRequest) {
 		return new ManufacturerResponse(manufacturerService.updateManufacturerById(manufacturerId, manufacturerRequest));
 	}
 

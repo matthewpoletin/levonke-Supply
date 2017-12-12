@@ -12,6 +12,7 @@ import com.levonke.Supply.web.model.ComponentResponse;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -108,8 +109,6 @@ class ComponentControllerTest {
 	}
 	
 	@Test
-//	@PrepareForTest({ UUID.class })
-//	@RunWith(PowerMockRunner.class)
 	@DisplayName("Create component")
 	void createComponent() throws Exception {
 		// Arrange
@@ -118,7 +117,7 @@ class ComponentControllerTest {
 //			.setUuid();
 //			.setManufacturer("Password");
 		
-		when(UUID.randomUUID()).thenReturn(null);
+		when(componentService.generateUUID()).thenReturn(null);
 		when(componentRepositoryMock.save(componentNoId)).thenReturn(component);
 		
 		ComponentRequest componentRequest = new ComponentRequest()

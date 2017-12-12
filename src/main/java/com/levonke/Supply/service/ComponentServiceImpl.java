@@ -46,7 +46,7 @@ public class ComponentServiceImpl implements ComponentService {
 		if (component == null) {
 			component = new Component()
 				.setManufacturerPartNumber(componentRequest.getManufacturerPartNumber());
-			component.setUuid(UUID.randomUUID());
+			component.setUuid(this.generateUUID());
 		}
 		return componentRepository.save(component);
 	}
@@ -94,5 +94,10 @@ public class ComponentServiceImpl implements ComponentService {
 	public Manufacturer getManufacturer(Integer componentId) {
 		return this.getComponentById(componentId).getManufacturer();
 	}
+	
+	public UUID generateUUID() {
+		return UUID.randomUUID();
+	}
+	
 	
 }

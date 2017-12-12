@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 @RequestMapping(ComponentController.componentBaseURI)
 public class ComponentController {
 	
-	public static final String componentBaseURI = "/api/supply";
+	static final String componentBaseURI = "/api/supply";
 	
 	private ComponentServiceImpl componentService;
 	
@@ -38,7 +39,7 @@ public class ComponentController {
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(value = "/components", method = RequestMethod.POST)
-	public ComponentResponse createComponent(@RequestBody ComponentRequest componentRequest, HttpServletResponse response) {
+	public ComponentResponse createComponent(@Valid @RequestBody ComponentRequest componentRequest, HttpServletResponse response) {
 		Component component = componentService.createComponent(componentRequest);
 		response.addHeader(HttpHeaders.LOCATION, componentBaseURI + "/components/" + component.getId());
 		return new ComponentResponse(component);
@@ -55,7 +56,7 @@ public class ComponentController {
 	}
 	
 	@RequestMapping(value = "/components/{componentId}", method = RequestMethod.PATCH)
-	public ComponentResponse updateComponent(@PathVariable("componentId") final Integer componentId, @RequestBody ComponentRequest componentRequest) {
+	public ComponentResponse updateComponent(@PathVariable("componentId") final Integer componentId, @Valid @RequestBody ComponentRequest componentRequest) {
 		return new ComponentResponse(componentService.updateComponentById(componentId, componentRequest));
 	}
 	
