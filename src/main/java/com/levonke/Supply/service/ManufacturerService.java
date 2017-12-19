@@ -4,14 +4,14 @@ import com.levonke.Supply.domain.Component;
 import com.levonke.Supply.domain.Manufacturer;
 import com.levonke.Supply.web.model.ManufacturerRequest;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface ManufacturerService {
-	List<Manufacturer> getManufacturers(Integer page, Integer size);
+	Page<Manufacturer> getManufacturers(Integer page, Integer size);
 	Manufacturer createManufacturer(ManufacturerRequest manufacturerRequest);
 	Manufacturer getManufacturerById(Integer manufacturerId);
 	Manufacturer updateManufacturerById(Integer manufacturerId, ManufacturerRequest manufacturerRequest);
 	void deleteManufacturerById(Integer manufacturerId);
 	
-	List<Component> getComponents(Integer manufacturerId);
+	Page<Component> getComponents(Integer manufacturerId, Integer page, Integer size);
 }

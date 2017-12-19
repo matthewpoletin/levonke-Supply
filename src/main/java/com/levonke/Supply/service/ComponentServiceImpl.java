@@ -6,12 +6,12 @@ import com.levonke.Supply.repository.ComponentRepository;
 import com.levonke.Supply.web.model.ComponentRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -29,14 +29,8 @@ public class ComponentServiceImpl implements ComponentService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<Component> getComponents(Integer page, Integer size) {
-		if (page == null) {
-			page = 0;
-		}
-		if (size == null) {
-			size = 25;
-		}
-		return componentRepository.findAll(PageRequest.of(page, size)).getContent();
+	public Page<Component> getComponents(Integer page, Integer size) {
+		return componentRepository.findAll(PageRequest.of(page, size));
 	}
 	
 	@Override

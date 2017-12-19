@@ -4,11 +4,11 @@ import com.levonke.Supply.domain.Component;
 import com.levonke.Supply.domain.Manufacturer;
 import com.levonke.Supply.web.model.ComponentRequest;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 import java.util.UUID;
 
 public interface ComponentService {
-	List<Component> getComponents(Integer page, Integer size);
+	Page<Component> getComponents(Integer page, Integer size);
 	Component createComponent(ComponentRequest componentRequest);
 	Component getComponentById(Integer componentId);
 	Component getComponentByUUID(UUID uuid);

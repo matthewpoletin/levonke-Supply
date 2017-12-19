@@ -14,6 +14,8 @@ public class ManufacturerRequest {
 	@NotEmpty(message = "Not valid name")
 	String name;
 	
+	String description;
+	
 	String website;
 	
 }

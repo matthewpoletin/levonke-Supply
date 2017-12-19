@@ -7,14 +7,13 @@ import com.levonke.Supply.web.model.ComponentResponse;
 import com.levonke.Supply.web.model.ManufacturerResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(ComponentController.componentBaseURI)
@@ -30,16 +29,16 @@ public class ComponentController {
 	}
 	
 	@RequestMapping(value = "/components", method = RequestMethod.GET)
-	public List<ComponentResponse> getComponents(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) {
-		return componentService.getComponents(page, size)
-			.stream()
-			.map(ComponentResponse::new)
-			.collect(Collectors.toList());
+	public Page<ComponentResponse> getComponents(@RequestParam(value = "page", required = false) Integer page,
+												 @RequestParam(value = "size", required = false) Integer size) {
+		return componentService.getComponents(page != null ? page : 0, size != null ? size : 25)
+			.map(ComponentResponse::new);
 	}
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(value = "/components", method = RequestMethod.POST)
-	public ComponentResponse createComponent(@Valid @RequestBody ComponentRequest componentRequest, HttpServletResponse response) {
+	public ComponentResponse createComponent(@Valid @RequestBody ComponentRequest componentRequest,
+											 HttpServletResponse response) {
 		Component component = componentService.createComponent(componentRequest);
 		response.addHeader(HttpHeaders.LOCATION, componentBaseURI + "/components/" + component.getId());
 		return new ComponentResponse(component);
@@ -56,7 +55,8 @@ public class ComponentController {
 	}
 	
 	@RequestMapping(value = "/components/{componentId}", method = RequestMethod.PATCH)
-	public ComponentResponse updateComponent(@PathVariable("componentId") final Integer componentId, @Valid @RequestBody ComponentRequest componentRequest) {
+	public ComponentResponse updateComponent(@PathVariable("componentId") final Integer componentId,
+											 @Valid @RequestBody ComponentRequest componentRequest) {
 		return new ComponentResponse(componentService.updateComponentById(componentId, componentRequest));
 	}
 	
@@ -67,7 +67,8 @@ public class ComponentController {
 	}
 	
 	@RequestMapping(value = "/components/{componentId}/manufacturers/{manufacturerId}", method = RequestMethod.POST)
-	public void setManufacturerToComponent(@PathVariable("componentId") final Integer componentId, @PathVariable("manufacturerId") final Integer manufacturerId) {
+	public void setManufacturerToComponent(@PathVariable("componentId") final Integer componentId,
+										   @PathVariable("manufacturerId") final Integer manufacturerId) {
 		componentService.setManufacturer(componentId, manufacturerId);
 	}
 	

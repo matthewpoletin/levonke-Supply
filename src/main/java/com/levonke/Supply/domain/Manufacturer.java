@@ -20,6 +20,9 @@ public class Manufacturer {
 	@Column(name = "manufacturers_name", unique = true, nullable = false)
 	private String name;
 	
+	@Column(name = "manufacturers_description", length = 1024)
+	private String description;
+	
 	@Column(name = "manufacturers_website")
 	private String website;
 	

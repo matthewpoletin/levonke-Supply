@@ -6,6 +6,8 @@ import com.levonke.Supply.repository.ManufacturerRepository;
 import com.levonke.Supply.web.model.ManufacturerRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,14 +27,8 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<Manufacturer> getManufacturers(Integer page, Integer size) {
-		if (page == null) {
-			page = 0;
-		}
-		if (size == null) {
-			size = 25;
-		}
-		return manufacturerRepository.findAll(PageRequest.of(page, size)).getContent();
+	public Page<Manufacturer> getManufacturers(Integer page, Integer size) {
+		return manufacturerRepository.findAll(PageRequest.of(page, size));
 	}
 	
 	@Override
@@ -40,6 +36,7 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 	public Manufacturer createManufacturer(ManufacturerRequest manufacturerRequest) {
 		Manufacturer manufacturer = new Manufacturer()
 			.setName(manufacturerRequest.getName())
+			.setDescription(manufacturerRequest.getDescription())
 			.setWebsite(manufacturerRequest.getWebsite());
 		return manufacturerRepository.save(manufacturer);
 	}
@@ -56,6 +53,7 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 	public Manufacturer updateManufacturerById(Integer manufacturerId, ManufacturerRequest manufacturerRequest) {
 		Manufacturer manufacturer = this.getManufacturerById(manufacturerId);
 		manufacturer.setName(manufacturerRequest.getName() != null ? manufacturerRequest.getName() : manufacturer.getName());
+		manufacturer.setDescription(manufacturerRequest.getDescription() != null ? manufacturerRequest.getDescription() : manufacturer.getDescription());
 		manufacturer.setWebsite(manufacturerRequest.getWebsite() != null ? manufacturerRequest.getWebsite() : manufacturer.getWebsite());
 		return manufacturerRepository.save(manufacturer);
 	}
@@ -67,10 +65,11 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 	}
 	
 	@Override
-	@Transactional
-	public List<Component> getComponents(Integer manufacturerId) {
+	@Transactional(readOnly = true)
+	public Page<Component> getComponents(Integer manufacturerId, Integer page, Integer size) {
 		Manufacturer manufacturer = this.getManufacturerById(manufacturerId);
-		return new ArrayList<>(manufacturer.getComponents());
+		List<Component> components = new ArrayList<>(manufacturer.getComponents());
+		return new PageImpl<>(components, PageRequest.of(page, size), components.size());
 	}
 	
 }
