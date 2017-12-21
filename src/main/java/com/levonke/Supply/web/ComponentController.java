@@ -45,18 +45,18 @@ public class ComponentController {
 	}
 	
 	@RequestMapping(value = "/components/{componentId}", method = RequestMethod.GET)
-	public ComponentResponse getComponent(@PathVariable("componentId") final Integer componentId) {
+	public ComponentResponse getComponentById(@PathVariable("componentId") final Integer componentId) {
 		return new ComponentResponse(componentService.getComponentById(componentId));
 	}
 	
 	@RequestMapping(value = "/component", method = RequestMethod.GET)
-	public ComponentResponse getComponent(@RequestParam(value = "uuid") final String uuid) {
+	public ComponentResponse getComponentByUUID(@RequestParam(value = "uuid") final String uuid) {
 		return new ComponentResponse(componentService.getComponentByUUID(UUID.fromString(uuid)));
 	}
 	
 	@RequestMapping(value = "/components/{componentId}", method = RequestMethod.PATCH)
-	public ComponentResponse updateComponent(@PathVariable("componentId") final Integer componentId,
-											 @Valid @RequestBody ComponentRequest componentRequest) {
+	public ComponentResponse updateComponentById(@PathVariable("componentId") final Integer componentId,
+												 @Valid @RequestBody ComponentRequest componentRequest) {
 		return new ComponentResponse(componentService.updateComponentById(componentId, componentRequest));
 	}
 	
